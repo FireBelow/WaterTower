@@ -17,7 +17,7 @@ from watertowerfunctions import read_scale, write_file, get_weather, IFTTTmsg, c
 # TO DO:
 # Add "cat /sys/class/thermal/thermal_zone0/temp" to record raspi board temp
 # "vcgencmd measure_volts core" for board voltage
-# read last reading and look for crazy deltas
+# read last reading and look for crazy deltas 
 # watch for huge and negative weights
 # initialize variables
 # log exceptions details and errors

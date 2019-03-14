@@ -873,6 +873,7 @@ String RunScript(int ScriptType, String IFAlertMsg){       //run any bash script
   return Output;
 }
 
+
 /*void IFAlert(String subIFMessage) {   //If This Than That function to send message to Cell Phone
   String SubAlertString;
   Process IFAlert;

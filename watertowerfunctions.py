@@ -26,43 +26,43 @@ import re
 module_logger = logging.getLogger("WeightMonitor.WeightFunctions")
 
 
-def read_scale(READINGS, DATAPIN, CLOCKPIN):
-    '''Get n number of readings from the scale connected to Data and Clock pins'''
+# def read_scale(READINGS, DATAPIN, CLOCKPIN):
+#     '''Get n number of readings from the scale connected to Data and Clock pins'''
 
-    logger = logging.getLogger("WeightMonitor.WeightFunctions.add")
-    logger.info("reading scale")
+#     logger = logging.getLogger("WeightMonitor.WeightFunctions.add")
+#     logger.info("reading scale")
 
-    # initialize sensor
-    hx = HX711(dout_pin=DATAPIN, pd_sck_pin=CLOCKPIN, gain=128, channel='A')
+#     # initialize sensor
+#     hx = HX711(dout_pin=DATAPIN, pd_sck_pin=CLOCKPIN, gain=128, channel='A')
 
-    # print("Reset")
-    result = hx.reset()     # Before we start, reset the hx711 (not necessary)
-    if result:          # you can check if the reset was successful
-        print('Ready to use')
-    else:
-        print('not ready')
+#     # print("Reset")
+#     result = hx.reset()     # Before we start, reset the hx711 (not necessary)
+#     if result:          # you can check if the reset was successful
+#         print('Ready to use')
+#     else:
+#         print('not ready')
 
-    # Read data several, or only one, time and return values it just returns exactly the number which hx711 sends argument times is not required default value is 1
-    data = hx.get_raw_data(READINGS)
-    # print('Raw data: ' + str(data))
+#     # Read data several, or only one, time and return values it just returns exactly the number which hx711 sends argument times is not required default value is 1
+#     data = hx.get_raw_data(READINGS)
+#     # print('Raw data: ' + str(data))
 
-    # if data != False: # always check if you get correct value or only False
-    #    print('Raw data: ' + str(data))
-    # else:
-    #    print('invalid data')
+#     # if data != False: # always check if you get correct value or only False
+#     #    print('Raw data: ' + str(data))
+#     # else:
+#     #    print('invalid data')
 
-#    if (int(np.std(data)) > STDEVthreshold):
-#        for i in 10:
-#          data = hx.get_raw_data(READINGS)
-#          if (int(np.std(data)) < STDEVthreshold):
-#              break
+# #    if (int(np.std(data)) > STDEVthreshold):
+# #        for i in 10:
+# #          data = hx.get_raw_data(READINGS)
+# #          if (int(np.std(data)) < STDEVthreshold):
+# #              break
 
-#    print(type(data))
-#    print(np.average(data))
-#    print(np.median(data))
-#    print(np.std(data))
+# #    print(type(data))
+# #    print(np.average(data))
+# #    print(np.median(data))
+# #    print(np.std(data))
 
-    return data
+#     return data
 
 
 def write_file(FILENAME, FILEOPERATION, SAVEDDATA):
@@ -372,173 +372,173 @@ def logger_setup(SCRIPTNAME, logger_level="info"):
         IFTTTmsg("Error setting loglevel: " + str(SCRIPTNAME))
 
 
-def calculate():
-    """Calculate stats on yesterday data"""
-    # TO DO:
-    # Use dictionary to read and edit/save daily values
-    # use shape attribute to store number of readings for each day
+# def calculate():
+#     """Calculate stats on yesterday data"""
+#     # TO DO:
+#     # Use dictionary to read and edit/save daily values
+#     # use shape attribute to store number of readings for each day
 
-    try:
-        LogFileName = "/home/pi/Documents/Code/Log/calculate.log"
-        logger = logging.getLogger("calculate")
-        logger.setLevel(logging.INFO)
+#     try:
+#         LogFileName = "/home/pi/Documents/Code/Log/calculate.log"
+#         logger = logging.getLogger("calculate")
+#         logger.setLevel(logging.INFO)
 
-        # create the logging file handler
-        LogHandler = logging.FileHandler(LogFileName)
-        formatter = logging.Formatter('%(asctime)s-%(name)s-%(levelname)s-%(message)s')
-        LogHandler.setFormatter(formatter)
+#         # create the logging file handler
+#         LogHandler = logging.FileHandler(LogFileName)
+#         formatter = logging.Formatter('%(asctime)s-%(name)s-%(levelname)s-%(message)s')
+#         LogHandler.setFormatter(formatter)
 
-        # # add handler to logger object
-        logger.addHandler(LogHandler)
-        logger.info("Program started")
+#         # # add handler to logger object
+#         logger.addHandler(LogHandler)
+#         logger.info("Program started")
 
-        TODAY = datetime.datetime.now().date()
-        # print(TODAY, type(TODAY))
-        MINUS_ONE_DAY = datetime.timedelta(days=1)
-        YESTERDAY = TODAY - MINUS_ONE_DAY
-        # print(YESTERDAY, type(YESTERDAY))
-        YEAR = TODAY.year
-        # print(YEAR, type(YEAR))
-        ISO_DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
-        ISO_DATE_FORMAT = "%Y-%m-%d"
-        FILE_DATE_FORMAT = "%Y%m%d"
+#         TODAY = datetime.datetime.now().date()
+#         # print(TODAY, type(TODAY))
+#         MINUS_ONE_DAY = datetime.timedelta(days=1)
+#         YESTERDAY = TODAY - MINUS_ONE_DAY
+#         # print(YESTERDAY, type(YESTERDAY))
+#         YEAR = TODAY.year
+#         # print(YEAR, type(YEAR))
+#         ISO_DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+#         ISO_DATE_FORMAT = "%Y-%m-%d"
+#         FILE_DATE_FORMAT = "%Y%m%d"
 
-        inputfilepath = "/home/pi/Documents/Code/" + YESTERDAY.strftime(FILE_DATE_FORMAT) + "_WeightLog.csv"
-        # inputfilepath = "/home/pi/Documents/Code/20180331_WeightLog.csv"
-        outputfilepath_Daily = "/home/pi/Documents/Code/" + str(YEAR) + "_DailyStats.csv"
-        outputfilepath_Yearly_csv = "/home/pi/Documents/Code/" + str(YEAR) + "_WeightLog.csv"
-        outputfilepath_Yearly_xlsx = "/home/pi/Documents/Code/" + str(YEAR) + "_WeightLog.xlsx"
-        COMMA = ","
-        datatosave = ""
-        headers = ""
-        observationthreshold = (12 * 24) * 0.9  # 90% of observation every 5 min each hour times 24 hrs
+#         inputfilepath = "/home/pi/Documents/Code/" + YESTERDAY.strftime(FILE_DATE_FORMAT) + "_WeightLog.csv"
+#         # inputfilepath = "/home/pi/Documents/Code/20180331_WeightLog.csv"
+#         outputfilepath_Daily = "/home/pi/Documents/Code/" + str(YEAR) + "_DailyStats.csv"
+#         outputfilepath_Yearly_csv = "/home/pi/Documents/Code/" + str(YEAR) + "_WeightLog.csv"
+#         outputfilepath_Yearly_xlsx = "/home/pi/Documents/Code/" + str(YEAR) + "_WeightLog.xlsx"
+#         COMMA = ","
+#         datatosave = ""
+#         headers = ""
+#         observationthreshold = (12 * 24) * 0.9  # 90% of observation every 5 min each hour times 24 hrs
 
-        print("Calculate Stats on Daily Readings")
-        logger.info("Read CSV")
-        with open(inputfilepath, "r") as inputfile:
-            # print(inputfile)
-            filecontents = pd.read_csv(inputfile, delimiter=',', parse_dates=True, dayfirst=False)      # nrows=5
-        filecontents.WMain.astype("category")
-        filecontents.WDesc.astype("category")
-        # print(type(filecontents))
-        # print(filecontents)
-        # print(filecontents.columns)
-        # print(filecontents.loc[:,["WSmlMed"]])
-        # print(filecontents.info())
-        # df.describe()
-        # df.column.value_counts()
+#         print("Calculate Stats on Daily Readings")
+#         logger.info("Read CSV")
+#         with open(inputfilepath, "r") as inputfile:
+#             # print(inputfile)
+#             filecontents = pd.read_csv(inputfile, delimiter=',', parse_dates=True, dayfirst=False)      # nrows=5
+#         filecontents.WMain.astype("category")
+#         filecontents.WDesc.astype("category")
+#         # print(type(filecontents))
+#         # print(filecontents)
+#         # print(filecontents.columns)
+#         # print(filecontents.loc[:,["WSmlMed"]])
+#         # print(filecontents.info())
+#         # df.describe()
+#         # df.column.value_counts()
 
-        # DateTime,WBigMed,WSmlMed,BigTemp,BigHum,SmlTemp,SmlHum,WMain,WDesc,WTemp,WPressure,WHumid,WWindSpd,WWindDir,WRain,WSnow,WVisible,WClouds,WSunrise,WSunset,Solar,UV,Precip1hr,PrecipToday,RawReadB,WBigStd,RawReadS,WSmlStd,Notes
+#         # DateTime,WBigMed,WSmlMed,BigTemp,BigHum,SmlTemp,SmlHum,WMain,WDesc,WTemp,WPressure,WHumid,WWindSpd,WWindDir,WRain,WSnow,WVisible,WClouds,WSunrise,WSunset,Solar,UV,Precip1hr,PrecipToday,RawReadB,WBigStd,RawReadS,WSmlStd,Notes
 
-        observationcount = filecontents.iloc[0].count()
-        if observationcount < observationthreshold:
-            print("missing datapoints")
-            IFTTTmsg("Missing datapoints yesterday")
+#         observationcount = filecontents.iloc[0].count()
+#         if observationcount < observationthreshold:
+#             print("missing datapoints")
+#             IFTTTmsg("Missing datapoints yesterday")
 
-        # print(filecontents.DateTime)
-        filedate = inputfilepath.split('_')
-        # print(filedate)
-        filedate = filedate[0].split('/')
-        # print(filedate)
-        filedate = filedate[-1]
-        # print(filedate)
-        filedate = filedate[0:4] + '-' + filedate[4:6] + '-' + filedate[6:8]
-        # print(filedate)
-        firstdateinfile = filecontents.iloc[0][0]
-        firstdateinfile = firstdateinfile[0:10]
-        # print(firstdateinfile)
-        if filedate == firstdateinfile:
-            print("Filename and Datalog Dates Match!")
-        else:
-            print("Filename and Datalog Dates Not a match")
-            IFTTTmsg("Filename and Datalog Dates Not a match")
-            logger.info("Filename and Datalog Dates Not a match")
-        logger.info("Calc Stats")
-        for column in filecontents.columns:
-            # print(type(filecontents[column]))
-            print(column)
-            # print(filecontents[column].dtypes)
-            if filecontents[column].dtypes == np.float or filecontents[column].dtypes == np.int:
-                # print(round(filecontents[column][0]))
-                Mean = str(round(filecontents[column].mean(), 2))
-                Median = str(round(filecontents[column].median(), 2))
-                Stdev = str(round(filecontents[column].std(), 2))
-                Min = str(round(filecontents[column].min(), 2))
-                Max = str(round(filecontents[column].max(), 2))
-                Q1 = str(round(filecontents[column].quantile(.25), 2))
-                Q3 = str(round(filecontents[column].quantile(.75), 2))
-                IQR = str(round(float(Q3) - float(Q1), 2))      # Inner Quartile Range (spread measure with Median)
-                Count = str(round(filecontents[column].count(), 2))
-                headers = headers+column+"-Mean,"+column+"-Median,"+column+"-Std,"+column+"-Min,"+column+"-Max,"+column+"-Q1,"+column+"-Q3,"+column+"-IQR,"+column+"-Count"+COMMA
-                currentcolumndata = Mean + COMMA + Median + COMMA + Stdev + COMMA + Min + COMMA + Max + COMMA + Q1 + COMMA + Q3 + COMMA + IQR + COMMA + Count
-                datatosave = datatosave + COMMA + currentcolumndata
+#         # print(filecontents.DateTime)
+#         filedate = inputfilepath.split('_')
+#         # print(filedate)
+#         filedate = filedate[0].split('/')
+#         # print(filedate)
+#         filedate = filedate[-1]
+#         # print(filedate)
+#         filedate = filedate[0:4] + '-' + filedate[4:6] + '-' + filedate[6:8]
+#         # print(filedate)
+#         firstdateinfile = filecontents.iloc[0][0]
+#         firstdateinfile = firstdateinfile[0:10]
+#         # print(firstdateinfile)
+#         if filedate == firstdateinfile:
+#             print("Filename and Datalog Dates Match!")
+#         else:
+#             print("Filename and Datalog Dates Not a match")
+#             IFTTTmsg("Filename and Datalog Dates Not a match")
+#             logger.info("Filename and Datalog Dates Not a match")
+#         logger.info("Calc Stats")
+#         for column in filecontents.columns:
+#             # print(type(filecontents[column]))
+#             print(column)
+#             # print(filecontents[column].dtypes)
+#             if filecontents[column].dtypes == np.float or filecontents[column].dtypes == np.int:
+#                 # print(round(filecontents[column][0]))
+#                 Mean = str(round(filecontents[column].mean(), 2))
+#                 Median = str(round(filecontents[column].median(), 2))
+#                 Stdev = str(round(filecontents[column].std(), 2))
+#                 Min = str(round(filecontents[column].min(), 2))
+#                 Max = str(round(filecontents[column].max(), 2))
+#                 Q1 = str(round(filecontents[column].quantile(.25), 2))
+#                 Q3 = str(round(filecontents[column].quantile(.75), 2))
+#                 IQR = str(round(float(Q3) - float(Q1), 2))      # Inner Quartile Range (spread measure with Median)
+#                 Count = str(round(filecontents[column].count(), 2))
+#                 headers = headers+column+"-Mean,"+column+"-Median,"+column+"-Std,"+column+"-Min,"+column+"-Max,"+column+"-Q1,"+column+"-Q3,"+column+"-IQR,"+column+"-Count"+COMMA
+#                 currentcolumndata = Mean + COMMA + Median + COMMA + Stdev + COMMA + Min + COMMA + Max + COMMA + Q1 + COMMA + Q3 + COMMA + IQR + COMMA + Count
+#                 datatosave = datatosave + COMMA + currentcolumndata
 
-                # print("Mean:" + Mean)
-                # print("Median:" + Median)
-                # print("Stdev:" + Stdev)
-                # print("Min:" + Min)
-                # print("Max:" + Max)
-                # print("Q1:" + Q1)
-                # print("Q3:" + Q3)
-                # print("Count:" + Count)
-                # print(headers)
-                # print(currentcolumndata)
-            else:
-                if column == "DateTime":
-                    print("Skip " + column)
-                else:
-                    if not filecontents[column].dtypes == np.float or not filecontents[column].dtypes == np.int:
-                        print("Add string column: " + column)
-                        headers = headers+column+"-Mean,"+column+"-Median,"+column+"-Std,"+column+"-Min,"+column+"-Max,"+column+"-Q1,"+column+"-Q3,"+column+"-IQR,"+column+"-Count"+COMMA
-                        currentcolumndata = ",,,,,,,,"
-                        datatosave = datatosave + COMMA + currentcolumndata
-        headers = "DateTime," + headers + "\n"
-        datatosave = filedate + datatosave + "\n"
-        # print(headers)
-        # print(currentcolumndata)
-        # print(datatosave)
+#                 # print("Mean:" + Mean)
+#                 # print("Median:" + Median)
+#                 # print("Stdev:" + Stdev)
+#                 # print("Min:" + Min)
+#                 # print("Max:" + Max)
+#                 # print("Q1:" + Q1)
+#                 # print("Q3:" + Q3)
+#                 # print("Count:" + Count)
+#                 # print(headers)
+#                 # print(currentcolumndata)
+#             else:
+#                 if column == "DateTime":
+#                     print("Skip " + column)
+#                 else:
+#                     if not filecontents[column].dtypes == np.float or not filecontents[column].dtypes == np.int:
+#                         print("Add string column: " + column)
+#                         headers = headers+column+"-Mean,"+column+"-Median,"+column+"-Std,"+column+"-Min,"+column+"-Max,"+column+"-Q1,"+column+"-Q3,"+column+"-IQR,"+column+"-Count"+COMMA
+#                         currentcolumndata = ",,,,,,,,"
+#                         datatosave = datatosave + COMMA + currentcolumndata
+#         headers = "DateTime," + headers + "\n"
+#         datatosave = filedate + datatosave + "\n"
+#         # print(headers)
+#         # print(currentcolumndata)
+#         # print(datatosave)
 
-        # if filecontents.column.max() > filecontents.column.quartile(.75):
-        #     print(str(filecontents.column.name) + " contains outliers")
-        #     IFTTTmsg(str(filecontents.column.name) + " contains outliers")
+#         # if filecontents.column.max() > filecontents.column.quartile(.75):
+#         #     print(str(filecontents.column.name) + " contains outliers")
+#         #     IFTTTmsg(str(filecontents.column.name) + " contains outliers")
 
-        try:
-            open(outputfilepath_Daily, 'r')
-            print("File already exists")
-        except:
-            print("File does not exist")
-            write_file(outputfilepath_Daily, 'w', headers)
+#         try:
+#             open(outputfilepath_Daily, 'r')
+#             print("File already exists")
+#         except:
+#             print("File does not exist")
+#             write_file(outputfilepath_Daily, 'w', headers)
 
-        try:
-            open(outputfilepath_Yearly_csv, 'r')
-            print("File already exists")
-        except:
-            print("File does not exist")
-            write_file(outputfilepath_Yearly_csv, 'w', headers)
+#         try:
+#             open(outputfilepath_Yearly_csv, 'r')
+#             print("File already exists")
+#         except:
+#             print("File does not exist")
+#             write_file(outputfilepath_Yearly_csv, 'w', headers)
 
-        try:
-            open(outputfilepath_Yearly_xlsx, 'r')
-            print("File already exists")
-        except:
-            print("File does not exist")
-            write_file(outputfilepath_Yearly_xlsx, 'w', headers)
+#         try:
+#             open(outputfilepath_Yearly_xlsx, 'r')
+#             print("File already exists")
+#         except:
+#             print("File does not exist")
+#             write_file(outputfilepath_Yearly_xlsx, 'w', headers)
 
-        logger.info("Write calc data to file")
-        # write_file(outputfilepath_Daily, 'a', headers)       #useful for testing header changes
-        write_file(outputfilepath_Daily, 'a', datatosave)
+#         logger.info("Write calc data to file")
+#         # write_file(outputfilepath_Daily, 'a', headers)       #useful for testing header changes
+#         write_file(outputfilepath_Daily, 'a', datatosave)
 
-        filecontents.to_csv(outputfilepath_Yearly_csv, mode='a', header=False, index=False, sep=",")
-        excel_writer = pd.ExcelWriter(outputfilepath_Yearly_xlsx)
-        filecontents.to_excel(excel_writer, header=False, index=False)
+#         filecontents.to_csv(outputfilepath_Yearly_csv, mode='a', header=False, index=False, sep=",")
+#         excel_writer = pd.ExcelWriter(outputfilepath_Yearly_xlsx)
+#         filecontents.to_excel(excel_writer, header=False, index=False)
 
-    except:
-        IFTTTmsg("Calculate Exception")
-        logging.exception("Calculate Exception")
-        raise
-        # print("Exception")
+#     except:
+#         IFTTTmsg("Calculate Exception")
+#         logging.exception("Calculate Exception")
+#         raise
+#         # print("Exception")
 
-    finally:
-        print("Done!")
+#     finally:
+#         print("Done!")
 
 
 def weather_date_only(date_list):
