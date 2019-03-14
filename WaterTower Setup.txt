@@ -1,0 +1,15 @@
+Change RaspPi config to
+enable SSH and VNC
+Change Hostname
+Set resolution
+Set time zone if needed
+Add memory graph panel (resouce monitor) and Temperature Monitor to top menu bar panel
+
+Also increase SWAP size with
+sudo nano /etc/dphys-swapfile
+change
+CONF_SWAPSIZE=1024
+
+http://www.bitpi.co/2015/02/16/accessing-a-windows-share-with-a-raspberry-pi/
+sudo nano /etc/fstab
+//192.168.1.125/Temp  /home/pi/BOXYtemp  cifs  username=House,password=funbox00,iocharset=utf8,sec=ntlm  0  0
