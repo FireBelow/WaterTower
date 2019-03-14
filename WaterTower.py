@@ -12,7 +12,7 @@ import time
 # import os.path
 import logging
 import json
-from watertowerfunctions import read_scale, write_file, get_weather, IFTTTmsg, calculate, check_web_response, weather_date_only
+from watertowerfunctions import write_file, get_weather, IFTTTmsg, check_web_response, weather_date_only    # read_scale, calculate,
 
 # TO DO:
 # Add "cat /sys/class/thermal/thermal_zone0/temp" to record raspi board temp
@@ -22,6 +22,14 @@ from watertowerfunctions import read_scale, write_file, get_weather, IFTTTmsg, c
 # initialize variables
 # log exceptions details and errors
 # make script to check if log updates are current, use tail()
+
+# Turn on/off each valve based on CSV schedule
+# Stop pump if Supply is empty
+# Stop pump if Tower is full
+# Turn on Pump if Tower Empty
+# Check Tower every 2 seconds when valve is on
+# If rain is predicted delay watering to see if rain falls (and how much)
+# If rain is predicted and storage is full, consider emptying rain barrels depending on volume forecasted
 
 # try:
 #     LogFileName = "/home/pi/Documents/Code/Log/Monitor.log"
