@@ -1,0 +1,35 @@
+#Ignore Private Files
+*.json
+private.*
+*.txt
+*credentials*
+
+#Ignore Working Files
+test.*
+testdata.*
+*.html
+Log/
+Old/
+
+#Ignore Data Collected
+*.csv
+*.xlsx
+*.jpeg
+*.png
+*.jpg
+Daily/
+Graphs/
+
+#Ignore Old Shell Files
+*.sh
+
+#Ignore Other Files
+Archive/
+DeepLearning/
+ML/
+__pycache__/
+exclude/
+www/
+Topo/
+crontab
+fstab
