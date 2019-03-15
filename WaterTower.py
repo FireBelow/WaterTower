@@ -14,15 +14,6 @@ import logging
 import json
 from watertowerfunctions import write_file, get_weather, IFTTTmsg, check_web_response, weather_date_only    # read_scale, calculate,
 
-# TO DO:
-# Add "cat /sys/class/thermal/thermal_zone0/temp" to record raspi board temp
-# "vcgencmd measure_volts core" for board voltage
-# read last reading and look for crazy deltas 
-# watch for huge and negative weights
-# initialize variables
-# log exceptions details and errors
-# make script to check if log updates are current, use tail()
-
 # Turn on/off each valve based on CSV schedule
 # Stop pump if Supply is empty
 # Stop pump if Tower is full
@@ -30,6 +21,32 @@ from watertowerfunctions import write_file, get_weather, IFTTTmsg, check_web_res
 # Check Tower every 2 seconds when valve is on
 # If rain is predicted delay watering to see if rain falls (and how much)
 # If rain is predicted and storage is full, consider emptying rain barrels depending on volume forecasted
+
+# Pin Definitons:  (For pin "GPIO4" use "4")
+Pin_Sensor_TowerFull = X
+Pin_Sensor_TowerEmpty = X
+Pin_Sensor_StorageFull = X
+Pin_Sensor_StorageEmpty = X
+# Pin_Sensor_WaterFlow
+Pin_Sensors = [Pin_Sensor_TowerFull, Pin_Sensor_TowerEmpty, Pin_Sensor_StorageFull, Pin_Sensor_StorageEmpty]
+Pin_Valve_Bed1Alley = X
+Pin_Valve_Bed2 = X
+Pin_Valve_Bed3 = X
+Pin_Valve_Bed4 = X
+Pin_Valve_Bed5andGarage = X
+Pin_Valve_Bed6Trees = X
+Pin_Valve_Bed7Herbs = X
+Pin_Valves = [Pin_Valve_Bed1Alley, Pin_Valve_Bed2, Pin_Valve_Bed3, Pin_Valve_Bed4, Pin_Valve_Bed5andGarage, Pin_Valve_Bed6Trees, Pin_Valve_Bed7Herbs]
+Pin_Pump = X
+
+# Pin Setup:
+GPIO.setmode(GPIO.BCM) # Broadcom pin-numbering scheme
+GPIO.setup(Pin_Sensors, GPIO.IN)
+GPIO.setup(Pin_Valves, GPIO.OUT)
+GPIO.setup(Pin_Pump, GPIO.OUT)
+
+# Initial state for Outputs:
+GPIO.output(Pin_Valves, GPIO.HIGH)        # Relay board in use uses HIGH as off
 
 # try:
 #     LogFileName = "/home/pi/Documents/Code/Log/Monitor.log"
