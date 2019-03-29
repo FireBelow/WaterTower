@@ -23,8 +23,8 @@ import time
 # If rain is predicted and storage is full, consider emptying rain barrels depending on volume forecasted
 
 # # Pin Definitons:  (For pin "GPIO4" use "4")
-Pin_Sensor_TowerFull = 2
-Pin_Sensor_TowerEmpty = 3
+Pin_Sensor_TowerFull = 17
+Pin_Sensor_TowerEmpty = 27
 Pin_Sensor_StorageFull = 4
 Pin_Sensor_StorageEmpty = 14
 Pin_Sensor_WaterFlow = 15
@@ -37,18 +37,23 @@ Pin_Valve_Bed5andGarage = 7
 Pin_Valve_Bed6Trees = 9
 Pin_Valve_Bed7Perenial = 11
 Pin_Valves = [Pin_Valve_Bed1Alley, Pin_Valve_Bed2, Pin_Valve_Bed3, Pin_Valve_Bed4, Pin_Valve_Bed5andGarage, Pin_Valve_Bed6Trees, Pin_Valve_Bed7Perenial]
-Pin_LED_TowerFull = 17
-Pin_LED_TowerEmpty = 27
+Pin_LED_TowerFull = 2
+Pin_LED_TowerEmpty = 3
 Pin_LED_StorageFull = 22
 Pin_LED_StorageEmpty = 10
+Pin_LEDs = [Pin_LED_TowerFull, Pin_LED_TowerEmpty, Pin_LED_StorageFull, Pin_LED_StorageEmpty]
 Pin_Pump = 18
 
 # Pin Setup:
-GPIO.setmode(GPIO.BCM)  # Broadcom pin-numbering scheme
+GPIO.setmode(GPIO.BCM)  # Broadcom/GPIO pin-numbering scheme not Board Pins
 GPIO.setup(Pin_Sensors, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(Pin_Valves, GPIO.OUT)
 GPIO.setup(Pin_Sensor_WaterFlow, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(Pin_Valves, GPIO.OUT)
+GPIO.output(Pin_Valves, GPIO.LOW)
+GPIO.setup(Pin_LEDs, GPIO.OUT)
+GPIO.output(Pin_LEDs, GPIO.LOW)
 GPIO.setup(Pin_Pump, GPIO.OUT)
+GPIO.output(Pin_Pump, GPIO.LOW)
 print("Setup Done")
 
 # Initial state for Outputs:
