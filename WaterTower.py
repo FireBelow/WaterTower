@@ -2,17 +2,17 @@
 
 # WaterTower.py
 
-import pandas as pd
-import numpy as np
+# import pandas as pd
+# import numpy as np
 import RPi.GPIO as GPIO
 # import subprocess
-import datetime
+# import datetime
 import time
 
 # import os.path
-import logging
-import json
-from watertowerfunctions import write_file, get_weather, IFTTTmsg, check_web_response, weather_date_only    # read_scale, calculate,
+# import logging
+# import json
+# from watertowerfunctions import write_file  #, get_weather, IFTTTmsg, check_web_response, weather_date_only    # read_scale, calculate,
 
 # Turn on/off each valve based on CSV schedule
 # Stop pump if Supply is empty
@@ -22,31 +22,47 @@ from watertowerfunctions import write_file, get_weather, IFTTTmsg, check_web_res
 # If rain is predicted delay watering to see if rain falls (and how much)
 # If rain is predicted and storage is full, consider emptying rain barrels depending on volume forecasted
 
-# Pin Definitons:  (For pin "GPIO4" use "4")
-Pin_Sensor_TowerFull = X
-Pin_Sensor_TowerEmpty = X
-Pin_Sensor_StorageFull = X
-Pin_Sensor_StorageEmpty = X
-# Pin_Sensor_WaterFlow
-Pin_Sensors = [Pin_Sensor_TowerFull, Pin_Sensor_TowerEmpty, Pin_Sensor_StorageFull, Pin_Sensor_StorageEmpty]
-Pin_Valve_Bed1Alley = X
-Pin_Valve_Bed2 = X
-Pin_Valve_Bed3 = X
-Pin_Valve_Bed4 = X
-Pin_Valve_Bed5andGarage = X
-Pin_Valve_Bed6Trees = X
-Pin_Valve_Bed7Herbs = X
-Pin_Valves = [Pin_Valve_Bed1Alley, Pin_Valve_Bed2, Pin_Valve_Bed3, Pin_Valve_Bed4, Pin_Valve_Bed5andGarage, Pin_Valve_Bed6Trees, Pin_Valve_Bed7Herbs]
-Pin_Pump = X
+# # Pin Definitons:  (For pin "GPIO4" use "4")
+Pin_Sensor_TowerFull = 2
+Pin_Sensor_TowerEmpty = 3
+Pin_Sensor_StorageFull = 4
+Pin_Sensor_StorageEmpty = 14
+Pin_Sensor_WaterFlow = 15
+Pin_Sensors = [Pin_Sensor_TowerFull, Pin_Sensor_TowerEmpty, Pin_Sensor_StorageFull]#, Pin_Sensor_StorageEmpty]
+Pin_Valve_Bed1Alley = 23
+Pin_Valve_Bed2 = 24
+Pin_Valve_Bed3 = 25
+Pin_Valve_Bed4 = 8
+Pin_Valve_Bed5andGarage = 7
+Pin_Valve_Bed6Trees = 9
+Pin_Valve_Bed7Perenial = 11
+Pin_Valves = [Pin_Valve_Bed1Alley, Pin_Valve_Bed2, Pin_Valve_Bed3, Pin_Valve_Bed4, Pin_Valve_Bed5andGarage, Pin_Valve_Bed6Trees, Pin_Valve_Bed7Perenial]
+Pin_LED_TowerFull = 17
+Pin_LED_TowerEmpty = 27
+Pin_LED_StorageFull = 22
+Pin_LED_StorageEmpty = 10
+Pin_Pump = 18
 
 # Pin Setup:
-GPIO.setmode(GPIO.BCM) # Broadcom pin-numbering scheme
-GPIO.setup(Pin_Sensors, GPIO.IN)
+GPIO.setmode(GPIO.BCM)  # Broadcom pin-numbering scheme
+GPIO.setup(Pin_Sensors, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(Pin_Valves, GPIO.OUT)
+GPIO.setup(Pin_Sensor_WaterFlow, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(Pin_Pump, GPIO.OUT)
+print("Setup Done")
 
 # Initial state for Outputs:
-GPIO.output(Pin_Valves, GPIO.HIGH)        # Relay board in use uses HIGH as off
+# GPIO.output(Pin_Valves, GPIO.HIGH)        # Relay board in use uses HIGH as off
+GPIO.output(Pin_Pump, GPIO.LOW)
+time.sleep(5)
+GPIO.output(Pin_Pump, GPIO.HIGH)
+print("Set Hi")
+try:
+    time.sleep(5)
+    GPIO.output(Pin_Pump, GPIO.LOW)
+    print("Set Low")
+    time.sleep(5)
+
 
 # try:
 #     LogFileName = "/home/pi/Documents/Code/Log/Monitor.log"
@@ -61,7 +77,7 @@ GPIO.output(Pin_Valves, GPIO.HIGH)        # Relay board in use uses HIGH as off
 #     # # add handler to logger object
 #     logger.addHandler(LogHandler)
 #     logger.info("Program started")
-    
+
 #     MINUS_ONE_DAY = datetime.timedelta(days=1)
 #     TODAY = datetime.datetime.now().date()
 #     print(TODAY, type(TODAY))
@@ -356,8 +372,8 @@ GPIO.output(Pin_Valves, GPIO.HIGH)        # Relay board in use uses HIGH as off
 except:
     # IFTTTmsg("WeightMonitor Exception")
     # logging.exception("WeightMonitor Exception")
-    # raise
+    raise
     # # print("Exception")
 
-finally:
-    GPIO.cleanup()
+# finally:
+#     GPIO.cleanup()
