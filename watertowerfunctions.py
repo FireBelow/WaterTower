@@ -64,6 +64,11 @@ module_logger = logging.getLogger("WeightMonitor.WeightFunctions")
 
 #     return data
 
+def Pump_On():
+
+    
+def Pump_Off():
+
 
 def write_file(FILENAME, FILEOPERATION, SAVEDDATA):
     '''This writes data to the file specified'''

@@ -22,6 +22,36 @@ import time
 # If rain is predicted delay watering to see if rain falls (and how much)
 # If rain is predicted and storage is full, consider emptying rain barrels depending on volume forecasted
 
+# TODO:
+# Add light flashing for problems
+# need physical switch to turn off pump outide (maintenance mode)
+# if something is wrong need better "pump stays off until problem fixed"
+# add rain delay based on pressure sensor (water added) or weather info
+# Create 2 sigma bars to determine when data is abnormal
+# Leak detection by timing how long it takes before TowerFull shows empty after a refill
+# Add console read for turning pump off for an amount of time for maintenance
+# Add config file to read settings
+# If TowerFullStatus is full, increase refresh rate
+# Fix web panel, related to timing and delay function
+# If cycling, write message to IF App.  If Error checks show problem, call IFAlert
+# Use switch/case in GetTime function
+# Test negative millis value else statement
+# Allow status check during the delay (see Blick without delay example)
+# remove datetime extra options, consider #ifdefine to keep code but remove extra during compile
+# dont read temperature if empty
+# Use Config type file to store pump run time. read from file during setup and store new value in each loop
+# Consider instead of using timing to detect dry and cycle pumping, use flags
+
+# TowerFullStatus       1=NotFull   0=Full       confirmed
+# TowerEmptyStatus      1=Empty     0=NotEmpty   confirmed
+# StorageFullStatus     1=Full      0=NotFull
+# StorageEmptyStatus    1=Empty     0=NotEmpty   confirmed
+
+# Pump_Runtime
+# Tower_TimetoEmpty
+# Pump_DryPumpTimeLimit
+# Pump_Cycling
+
 # # Pin Definitons:  (For pin "GPIO4" use "4")
 Pin_Sensor_TowerFull = 17
 Pin_Sensor_TowerEmpty = 27
