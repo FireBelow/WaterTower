@@ -88,13 +88,13 @@ print("Setup Done")
 
 # Initial state for Outputs:
 # GPIO.output(Pin_Valves, GPIO.HIGH)        # Relay board in use uses HIGH as off
-GPIO.output(Pin_Pump, GPIO.LOW)
+GPIO.output(Pin_LEDs, GPIO.LOW)
 time.sleep(5)
-GPIO.output(Pin_Pump, GPIO.HIGH)
+GPIO.output(Pin_LEDs, GPIO.HIGH)
 print("Set Hi")
 try:
     time.sleep(5)
-    GPIO.output(Pin_Pump, GPIO.LOW)
+    GPIO.output(Pin_LEDs, GPIO.LOW)
     print("Set Low")
     time.sleep(5)
 
