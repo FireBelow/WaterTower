@@ -89,23 +89,57 @@ WET_STORAGEFULL = 1
 DRY_STORAGEFULL = 0
 RUNNING = 1
 STOPPED = 0
-
+pump_start = 0
+pump_stop = 0
+pump_runtime = 0
+PUMP_MAX_RUNTIME = 5 * 60       # seconds
 
 # Initial state for Outputs:
 # GPIO.output(Pin_Valves, GPIO.HIGH)        # Relay board in use uses HIGH as off
 # GPIO.output(Pin_LEDs, GPIO.LOW)
 # time.sleep(2)
 
+def Update_LEDs():
+    if Sensor_Check(Pin_Sensor_TowerFull) is WET:
+        LED_TurnOn(Pin_LED_TowerFull)
+    else:
+        LED_TurnOff(Pin_LED_TowerFull)
+    if Sensor_Check(Pin_Sensor_TowerEmpty) is WET:
+        LED_TurnOn(Pin_LED_TowerEmpty)
+    else:
+        LED_TurnOff(Pin_LED_TowerEmpty)
+    if Sensor_Check(Pin_Sensor_StorageFull) is WET_STORAGEFULL:
+        LED_TurnOn(Pin_LED_StorageFull)
+    else:
+        LED_TurnOff(Pin_LED_StorageFull)
+    if Sensor_Check(Pin_Sensor_StorageEmpty) is WET:
+        LED_TurnOn(Pin_LED_StorageEmpty)
+    else:
+        LED_TurnOff(Pin_LED_StorageEmpty)
+
+
 def Pump_TurnOn(Pump_Pin):
     # Is there water in Storage
+    global pump_start
+    global PUMP_MAX_RUNTIME
     print("Storage: {}".format(Sensor_Check(Pin_Sensor_StorageEmpty)))
     if Sensor_Check(Pin_Sensor_StorageEmpty) is DRY:
         print("*** No Water ***")
         return 0
     else:
         if Pump_Pin is STOPPED:
-            GPIO.output(Pump_Pin, GPIO.HIGH)
+            if Sensor_Check(Pin_Sensor_StorageEmpty) is WET:
+                print("Water Available: {}".format(Sensor_Check(Pin_Sensor_StorageEmpty)))
+                GPIO.output(Pump_Pin, GPIO.HIGH)        # Start Pump
+                pump_start = time.time()
         else:
+            # How long has pump been running
+            pump_timenow = time.time()
+            if (pump_timenow - pump_start) > PUMP_MAX_RUNTIME:
+                print("Pump Ran Too Long: {}".format(pump_timenow - pump_start))
+                Pump_TurnOff(Pin_Pump)
+            if Sensor_Check(Pin_Sensor_TowerFull) is WET:
+                print("Tower Already Full: {}".format(Sensor_Check(Pin_Sensor_TowerFull)))
             return 0
     # Is the Pump Already On, If so check how long it has been on
 
@@ -113,7 +147,13 @@ def Pump_TurnOn(Pump_Pin):
 def Pump_TurnOff(Pump_Pin):
     # Stop pump if Supply is empty
     # Stop pump if Tower is full
+    global pump_stop
+    global pump_start
+    global pump_runtime
     GPIO.output(Pump_Pin, GPIO.LOW)
+    pump_stop = time.time()
+    pump_runtime = pump_stop - pump_start
+    print("Pump Runtime: {}".format())
 
 
 def Valve_Open(Pin):
@@ -130,6 +170,14 @@ def LED_TurnOn(LED_Pin):
 
 def LED_TurnOff(LED_Pin):
     GPIO.output(LED_Pin, GPIO.LOW)
+
+
+def LED_Flash(LED_Pin, Duration, x):
+    for n in range(0, x):
+        LED_TurnOn(LED_Pin)
+        time.sleep(Duration)
+        LED_TurnOff(LED_Pin)
+        time.sleep(Duration)
 
 
 def Sensor_Check(Sensor_Pin):
@@ -158,8 +206,12 @@ try:
     Pump_TurnOff(Pin_Pump)
 
 # Turn on Pump if Tower Empty
+    Update_LEDs()
     if Sensor_Check(Pin_Sensor_TowerEmpty) is DRY:
         Pump_TurnOn(Pin_Pump)
+    if Sensor_Check(Pin_Sensor_StorageFull) is WET_STORAGEFULL:
+        LED_Flash(Pin_Sensor_StorageFull, 1, 3)
+
 
 except:
     # IFTTTmsg("WeightMonitor Exception")
