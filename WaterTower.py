@@ -93,6 +93,9 @@ pump_start = 0
 pump_stop = 0
 pump_runtime = 0
 PUMP_MAX_RUNTIME = 5 * 60       # seconds
+WaterFlow_Count = 0
+WaterFlow_Timer = 0
+WaterFlow_Rate = 0
 
 # Initial state for Outputs:
 # GPIO.output(Pin_Valves, GPIO.HIGH)        # Relay board in use uses HIGH as off
@@ -173,15 +176,25 @@ def LED_TurnOff(LED_Pin):
 
 
 def LED_Flash(LED_Pin, Duration, x):
-    for n in range(0, x):
-        LED_TurnOn(LED_Pin)
-        time.sleep(Duration)
-        LED_TurnOff(LED_Pin)
-        time.sleep(Duration)
+    if Sensor_Check(Pin_Pump) is not RUNNING:
+        for n in range(0, x):
+            LED_TurnOn(LED_Pin)
+            time.sleep(Duration)
+            LED_TurnOff(LED_Pin)
+            time.sleep(Duration)
 
 
 def Sensor_Check(Sensor_Pin):
     return GPIO.input(Sensor_Pin)
+
+
+def WaterFlow_Counter():
+    global WaterFlow_Count
+    global WaterFlow_Timer
+    if WaterFlow_Count is 0:
+        WaterFlow_Timer = time.time()
+    WaterFlow_Count = WaterFlow_Count + 1
+
 
 try:
     print("System Test")
@@ -206,11 +219,15 @@ try:
     Pump_TurnOff(Pin_Pump)
 
 # Turn on Pump if Tower Empty
+    GPIO.add_event_detect(Pin_Sensor_WaterFlow, GPIO.FALLING, callback=WaterFlow_Counter)
     Update_LEDs()
     if Sensor_Check(Pin_Sensor_TowerEmpty) is DRY:
         Pump_TurnOn(Pin_Pump)
     if Sensor_Check(Pin_Sensor_StorageFull) is WET_STORAGEFULL:
         LED_Flash(Pin_Sensor_StorageFull, 1, 3)
+    if WaterFlow_Count is not 0:
+        WaterFlow_Rate = WaterFlow_Count/(time.time() - WaterFlow_Timer)
+        WaterFlow_Count = 0
 
 
 except:
